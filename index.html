@@ -2086,6 +2086,7 @@
       <!-- STEP 1: SETUP -->
       <div class="section-card" id="card-setup">
         <span class="section-label">Step 1 of 4</span>
+        <div style="display:inline-block;background:#8B3434;color:#fff;font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:10px;">★ Start here</div>
         <h2 class="section-title">Your Constraints</h2>
 
         <div class="inline-fields-3">
@@ -2137,7 +2138,7 @@
             <h2 class="bov-hd-title">Wedding Budget Overview</h2>
             <span id="s-badge" class="bov-pill bov-pill--ok">On Track ✓</span>
           </div>
-          <p class="bov-hd-sub" id="bov-sub">Add your budget and vendors to see a full overview.</p>
+          <p class="bov-hd-sub" id="bov-sub">Add your budget above, then enter vendor costs in Step 4 · Vendor Hub to see a full overview.</p>
         </div>
         <div class="bov-hd-divider"></div>
         <div class="bov-hd-right">
@@ -2187,11 +2188,11 @@
             <span>% of Total</span>
           </div>
         </div>
-        <div id="bov-rows"><p class="bov-empty">Add vendor costs above to see your breakdown.</p></div>
+        <div id="bov-rows"><p class="bov-empty">Add vendor costs in <strong>Step 4 · Vendor Hub</strong> to see your breakdown.</p></div>
       </div>
       <div class="bov-footer">
         <svg class="bov-footer-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-        <span id="bov-footer-msg">Add your budget details to get started.</span>
+        <span id="bov-footer-msg">Enter your budget above, then add vendor costs in Step 4 to get started.</span>
         <span class="bov-footer-diamond">✦</span>
       </div>
     </div>
@@ -2246,7 +2247,7 @@
           </div>
           <div class="reality-row highlight">
             <span class="r-label">Status</span>
-            <span class="r-value" id="r-status">Fill in budget + non-negotiables above</span>
+            <span class="r-value" id="r-status">Fill in budget above (Step 1) and choose non-negotiables (Step 2)</span>
           </div>
         </div>
 
@@ -2344,7 +2345,7 @@
               </div>
               <div>
                 <p class="vh-alloc-empty-title">Vendor costs will appear here.</p>
-                <p class="vh-alloc-empty-sub">Add vendors and enter costs to see<br>your budget allocation.</p>
+                <p class="vh-alloc-empty-sub">Add vendors and enter costs in the table above to see your budget allocation.</p>
               </div>
             </div>
             <div id="budget-breakdown" class="vh-alloc-grid"></div>
@@ -2842,7 +2843,7 @@ function updateMath() {
     const sv = document.getElementById('bov-status-val');
     const ss = document.getElementById('bov-status-sub');
     if (sv) { sv.textContent = '—'; sv.className = 'bov-status-val'; }
-    if (ss) ss.textContent = 'Add your budget above';
+    if (ss) ss.textContent = 'Enter your budget in Step 1 above';
     renderBovBreakdown();
   }
 
@@ -2916,7 +2917,7 @@ function updateMath() {
     document.getElementById('r-nonneg-cost').textContent = '—';
     document.getElementById('r-remaining').textContent   = '—';
     document.getElementById('r-per-person').textContent  = '—';
-    document.getElementById('r-status').textContent      = 'Choose your non-negotiables above to see the numbers.';
+    document.getElementById('r-status').textContent      = 'Choose your non-negotiables in Step 2 above to see the numbers.';
   }
 
   // ── Decision summary ──
