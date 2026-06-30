@@ -1153,6 +1153,69 @@
   }
   .notes-textarea:focus { border-color: var(--color-sage); background: rgba(255,255,255,0.7); }
 
+
+  /* ── DECISION ENGINE ── */
+  .de-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-parchment-dark);
+    border-top: 3px solid #8B3434;
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-card);
+  }
+  .de-badge {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; padding: 4px 12px; border-radius: 100px;
+    margin-bottom: 12px; border: 1px solid;
+  }
+  .de-badge--idle     { background: rgba(200,185,154,0.15); color: var(--ink-light); border-color: var(--border-light); }
+  .de-badge--calm     { background: rgba(200,185,154,0.15); color: var(--color-bronze); border-color: var(--color-bronze); }
+  .de-badge--positive { background: rgba(107,127,88,0.12); color: #4a6e36; border-color: #7a9a5a; }
+  .de-badge--warning  { background: rgba(180,154,82,0.12); color: #8a6a1a; border-color: var(--gold); }
+  .de-badge--critical { background: rgba(139,52,52,0.10); color: #8B3434; border-color: #8B3434; }
+  .de-headline {
+    font-family: var(--font-display);
+    font-size: 1.25rem; font-weight: 400; color: var(--color-ink);
+    line-height: 1.4; margin-bottom: 16px;
+  }
+  .de-grid { margin-bottom: 16px; border-top: 1px solid var(--border-light); }
+  .de-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px solid rgba(200,185,154,0.18);
+    font-size: 14px;
+  }
+  .de-row-label { color: var(--ink-light); }
+  .de-row-value { font-weight: 500; color: var(--color-ink); }
+  .de-val--positive { color: #4a6e36; }
+  .de-val--warning  { color: #8a6a1a; }
+  .de-val--critical { color: #8B3434; }
+  .de-action {
+    background: rgba(139,52,52,0.06); border-left: 3px solid #8B3434;
+    padding: 10px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 16px;
+  }
+  .de-action-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; color: #8B3434; margin-bottom: 4px;
+  }
+  .de-action-text { font-size: 14px; color: var(--color-ink); line-height: 1.5; }
+  .de-action.positive { background: rgba(107,127,88,0.08); border-left-color: #4a6e36; }
+  .de-action.positive .de-action-label { color: #4a6e36; }
+  .de-scenarios { border-top: 1px solid var(--border-light); padding-top: 14px; }
+  .de-scenarios-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; color: var(--color-bronze); margin-bottom: 10px;
+  }
+  .de-scenario-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .de-btn {
+    font-family: var(--font-body); font-size: 12px; font-weight: 500;
+    padding: 6px 14px; border: 1px solid var(--color-parchment-dark);
+    border-radius: 100px; background: var(--color-white); color: var(--color-ink);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .de-btn:hover { background: var(--color-parchment); border-color: var(--color-bronze); }
+
   /* ── BUDGET BREAKDOWN ── */
   .budget-breakdown { margin-top: 14px; }
   .bb-row {
@@ -2166,7 +2229,7 @@
       <div class="section-card">
         <span class="section-label">Step 3 of 4</span>
         <h2 class="section-title">Budget Reality Check</h2>
-        <p class="decision-intro">Based on your non-negotiables and guest count, here is your estimated commitment.</p>
+        <p class="decision-intro">How much of your budget do your top priorities consume — and what is left?</p>
 
         <div class="reality-panel" id="reality-panel">
           <div class="reality-row">
@@ -2190,6 +2253,30 @@
         <div id="replan-section" style="display:none;">
           <p class="decision-intro" style="color:var(--terra);">You're <span id="replan-shortfall">$0</span> over. Pick one lever to pull:</p>
           <div id="replan-options"></div>
+        </div>
+      </div>
+
+
+      <!-- DECISION ENGINE -->
+      <div class="de-card section-card no-print" id="decision-engine">
+        <span class="section-label">Plan Diagnosis</span>
+        <h2 class="section-title">Your Plan Status</h2>
+        <span class="de-badge de-badge--idle" id="de-badge">Waiting for inputs</span>
+        <p class="de-headline" id="de-headline">Enter your budget and guest count above to see your plan diagnosis.</p>
+        <div class="de-grid" id="de-grid"></div>
+        <div class="de-action" id="de-action" style="display:none;">
+          <div class="de-action-label">Best next step</div>
+          <div class="de-action-text" id="de-action-text"></div>
+        </div>
+        <div class="de-scenarios">
+          <div class="de-scenarios-label">Test a scenario</div>
+          <div class="de-scenario-btns">
+            <button class="de-btn" onclick="adjustGuests(-10)">−10 guests</button>
+            <button class="de-btn" onclick="adjustGuests(10)">+10 guests</button>
+            <button class="de-btn" onclick="adjustBudget(1000)">+$1,000 budget</button>
+            <button class="de-btn" onclick="adjustBudget(-1000)">−$1,000 budget</button>
+            <button class="de-btn" onclick="adjustBudget(5000)">+$5,000 budget</button>
+          </div>
         </div>
       </div>
 
@@ -2739,17 +2826,17 @@ function updateMath() {
       if (badge) { badge.className = 'bov-pill bov-pill--danger'; badge.textContent = 'Over Budget'; }
       if (sv)    { sv.textContent = 'Over Budget'; sv.className = 'bov-status-val danger'; }
       if (ss)    ss.textContent = fmt(Math.abs(remaining)) + ' over limit';
-      if (fm)    fm.textContent = 'Review vendor costs and non-negotiables to get back on track.';
+      if (fm)    fm.textContent = 'Over budget. Cut guests, reduce a vendor cost, or increase your ceiling.';
     } else if (pct > 85) {
       if (badge) { badge.className = 'bov-pill bov-pill--warn'; badge.textContent = 'Nearly Full'; }
       if (sv)    { sv.textContent = 'Nearly Full'; sv.className = 'bov-status-val warn'; }
       if (ss)    ss.textContent = fmt(remaining) + ' remaining';
-      if (fm)    fm.textContent = 'Almost there — review discretionary categories carefully.';
+      if (fm)    fm.textContent = 'Almost at your limit. Review every remaining category.';
     } else {
       if (badge) { badge.className = 'bov-pill bov-pill--ok'; badge.textContent = 'On Track ✓'; }
       if (sv)    { sv.textContent = 'On Track'; sv.className = 'bov-status-val'; }
-      if (ss)    ss.textContent = "You're within your planned budget";
-      if (fm)    fm.textContent = 'Great job staying on track! Keep focusing on your top priorities.';
+      if (ss)    ss.textContent = 'Your plan is on track';
+      if (fm)    fm.textContent = 'You can afford this plan. Keep focusing on what matters most.';
     }
   } else {
     const sv = document.getElementById('bov-status-val');
@@ -2811,17 +2898,17 @@ function updateMath() {
     const rStatus = document.getElementById('r-status');
     const replan  = document.getElementById('replan-section');
     if (leftover < 0) {
-      rStatus.textContent = '⚠ Over budget — adjust below';
+      rStatus.textContent = 'Over budget — something has to change.';
       rStatus.parentElement.classList.add('danger');
       replan.style.display = 'block';
       document.getElementById('replan-shortfall').textContent = fmt(Math.abs(leftover));
       buildReplanOptions(Math.abs(leftover), budget, guests);
     } else if (leftover < budget * 0.15) {
-      rStatus.textContent = '⚡ Tight — limited flexibility remaining';
+      rStatus.textContent = 'Tight — one surprise could push you over.';
       rStatus.parentElement.classList.remove('danger');
       replan.style.display = 'none';
     } else {
-      rStatus.textContent = '✓ Feasible — you have room to work with';
+      rStatus.textContent = 'Your dream priorities are protected. You have room to breathe.';
       rStatus.parentElement.classList.remove('danger');
       replan.style.display = 'none';
     }
@@ -2829,7 +2916,7 @@ function updateMath() {
     document.getElementById('r-nonneg-cost').textContent = '—';
     document.getElementById('r-remaining').textContent   = '—';
     document.getElementById('r-per-person').textContent  = '—';
-    document.getElementById('r-status').textContent      = 'Select 3 non-negotiables above to see your reality check.';
+    document.getElementById('r-status').textContent      = 'Choose your non-negotiables above to see the numbers.';
   }
 
   // ── Decision summary ──
@@ -2840,6 +2927,21 @@ function updateMath() {
 
   // ── Footer ──
   if (state.names) document.getElementById('footer-names').textContent = state.names;
+}
+
+
+function adjustGuests(delta) {
+  var el = document.getElementById('f-guests');
+  if (!el) return;
+  el.value = Math.max(0, (parseInt(el.value) || 0) + delta);
+  save(); updateMath();
+}
+
+function adjustBudget(delta) {
+  var el = document.getElementById('f-budget');
+  if (!el) return;
+  el.value = Math.max(0, (parseFloat(el.value) || 0) + delta);
+  save(); updateMath();
 }
 
 function buildReplanOptions(shortfall, budget, guests) {
@@ -2861,30 +2963,115 @@ function buildReplanOptions(shortfall, budget, guests) {
 }
 
 function updateDecisionSummary() {
-  const el = document.getElementById('decision-summary');
-  if (!el) return;
-  const lines = [];
-  if (state.names) lines.push(`<strong>${state.names}</strong>`);
-  if (state.nonneg.length > 0) {
-    lines.push('<br><em style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">Non-Negotiables</em>');
-    state.nonneg.forEach(id => {
-      const opt = NON_NEG_OPTIONS.find(o => o.id === id);
-      if (opt) {
-        lines.push(`✦ ${opt.label}`);
-      } else {
-        // Check if it's a custom non-negotiable
-        const custom = state.custom_nonneg.find(c => c.id === id);
-        if (custom) lines.push(`✦ ${custom.label}`);
-      }
+  var badge    = document.getElementById('de-badge');
+  var headline = document.getElementById('de-headline');
+  var grid     = document.getElementById('de-grid');
+  var actionDiv= document.getElementById('de-action');
+  var actionText = document.getElementById('de-action-text');
+  if (!badge) return;
+
+  var budget   = parseFloat(state.budget) || 0;
+  var guests   = parseInt(state.guests)   || 0;
+  var capacity = parseInt(state.capacity) || 0;
+
+  // Non-neg estimated cost
+  var nonnegCost = 0;
+  if (guests > 0) {
+    state.nonneg.forEach(function(id) {
+      var opt = NON_NEG_OPTIONS.find(function(o){ return o.id === id; });
+      nonnegCost += opt ? (opt.est * guests) : (50 * guests);
     });
   }
-  const booked = state.vendors.filter(v => v.status === 'booked' || v.status === 'paid');
-  if (booked.length) {
-    lines.push('<br><em style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">Confirmed Vendors</em>');
-    booked.forEach(v => lines.push(`✓ ${v.name}`));
+
+  var vendorTotal = state.vendors.reduce(function(s,v){ return s + (parseFloat(v.cost)||0); }, 0);
+  var allocated   = vendorTotal;
+  var remaining   = budget - allocated;
+  var nonnegPct   = budget > 0 ? (nonnegCost / budget) * 100 : 0;
+  var allocPct    = budget > 0 ? (allocated / budget) * 100 : 0;
+  var perPerson   = guests > 0 && budget > 0 ? budget / guests : 0;
+  var buffer      = budget * 0.10;
+
+  // Detect issues
+  var guestOverCapacity = capacity > 0 && guests > capacity;
+  var overBudget        = budget > 0 && allocated > budget;
+  var tight             = budget > 0 && remaining >= 0 && remaining < buffer * 1.5;
+  var nonnegHeavy       = nonnegPct > 75 && nonnegCost > 0;
+  var lowPerPerson      = perPerson > 0 && perPerson < 150;
+
+  // Status level
+  var status = 'idle';
+  if (budget > 0 || guests > 0) {
+    if (overBudget || guestOverCapacity) status = 'critical';
+    else if (tight || nonnegHeavy || lowPerPerson) status = 'warning';
+    else if (budget > 0 && guests > 0) status = 'positive';
+    else status = 'calm';
   }
-  el.innerHTML = lines.length ? lines.join('<br>') : 'Complete the steps on the left to see your decision summary here.';
+
+  var BADGES = {
+    idle:     { cls: 'de-badge--idle',     text: 'Waiting for inputs' },
+    calm:     { cls: 'de-badge--calm',     text: 'Getting started' },
+    positive: { cls: 'de-badge--positive', text: 'Plan looks good ✓' },
+    warning:  { cls: 'de-badge--warning',  text: 'Needs attention' },
+    critical: { cls: 'de-badge--critical', text: 'Conflict detected' }
+  };
+  var b = BADGES[status] || BADGES.idle;
+  badge.className = 'de-badge ' + b.cls;
+  badge.textContent = b.text;
+
+  // Headline — emotional payoff
+  var hl = 'Enter your budget and guest count above to see your plan diagnosis.';
+  if (status === 'calm')     hl = 'Your plan is taking shape. Add your guest count and budget to continue.';
+  if (status === 'positive') hl = 'You can afford this plan. Your priorities are protected.';
+  if (status === 'warning') {
+    if (tight)          hl = 'You have room — but barely. One surprise expense could push you over.';
+    else if (nonnegHeavy) hl = 'Your top priorities use most of the budget. Everything else needs to stay lean.';
+    else if (lowPerPerson) hl = 'Your per-guest budget is tight. Consider trimming the guest list.';
+    else                hl = 'Your plan needs attention in one or more areas.';
+  }
+  if (status === 'critical') {
+    if (overBudget)        hl = 'You are ' + fmt(Math.abs(remaining)) + ' over budget. Something has to change.';
+    else if (guestOverCapacity) hl = 'Your guest count (' + guests + ') exceeds venue capacity (' + capacity + '). Resolve this before booking.';
+  }
+  if (headline) headline.textContent = hl;
+
+  // Grid rows
+  var rows = [];
+  if (budget > 0)     rows.push({ label: 'Total budget',     value: fmt(budget),   cls: '' });
+  if (allocated > 0)  rows.push({ label: 'Vendor costs',     value: fmt(allocated),cls: overBudget ? 'de-val--critical' : '' });
+  if (budget > 0 && allocated >= 0) rows.push({ label: 'Remaining',    value: fmt(remaining),cls: remaining < 0 ? 'de-val--critical' : remaining < buffer*1.5 ? 'de-val--warning' : 'de-val--positive' });
+  if (nonnegCost > 0) rows.push({ label: 'Priority spend',  value: fmt(nonnegCost) + ' (' + Math.round(nonnegPct) + '% of budget)', cls: nonnegHeavy ? 'de-val--warning' : '' });
+  if (perPerson > 0)  rows.push({ label: 'Per-guest budget', value: fmt(perPerson), cls: lowPerPerson ? 'de-val--warning' : '' });
+  if (guests > 0 && capacity > 0) rows.push({ label: 'Guests vs capacity', value: guests + ' of ' + capacity, cls: guestOverCapacity ? 'de-val--critical' : 'de-val--positive' });
+
+  if (grid) {
+    grid.innerHTML = rows.map(function(r) {
+      return '<div class="de-row"><span class="de-row-label">' + r.label + '</span><span class="de-row-value ' + (r.cls||'') + '">' + r.value + '</span></div>';
+    }).join('');
+  }
+
+  // Best action
+  var action = '', actionCls = '';
+  if (overBudget && perPerson > 0) {
+    var guestCut = Math.ceil(Math.abs(remaining) / perPerson);
+    action = 'Cut ' + guestCut + ' guests, or find ' + fmt(Math.abs(remaining)) + ' in vendor savings to balance the budget.';
+  } else if (guestOverCapacity) {
+    action = 'Book a venue with capacity for ' + guests + '+ guests, or reduce your guest list to ' + capacity + '.';
+  } else if (nonnegHeavy) {
+    action = 'Your priorities consume ' + Math.round(nonnegPct) + '% of the budget. Keep all remaining vendor costs under ' + fmt(budget - nonnegCost) + '.';
+  } else if (tight) {
+    action = 'Keep at least ' + fmt(buffer) + ' unassigned as a buffer for unexpected costs.';
+  } else if (status === 'positive') {
+    action = 'You have ' + fmt(remaining) + ' unallocated. Add vendor costs in Step 4 to see the full picture.';
+    actionCls = 'positive';
+  }
+
+  if (actionDiv && actionText) {
+    actionDiv.style.display = action ? 'block' : 'none';
+    actionDiv.className = 'de-action' + (actionCls ? ' ' + actionCls : '');
+    actionText.textContent = action;
+  }
 }
+
 
 function updateBudgetBreakdown() {
   var el = document.getElementById('budget-breakdown');
