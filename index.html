@@ -2415,21 +2415,46 @@ let state = {
   milestones_done: [], // array of milestone `days` values that are checked off
 };
 
+// ── Validate & normalize a raw state object ──
+// Guards against corrupted saves and malformed backup codes: every field is
+// coerced to its expected type so a bad value can never break rendering.
+function normalizeState(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const str = v => (typeof v === 'string' || typeof v === 'number') ? String(v) : '';
+  return {
+    budget:   str(raw.budget),
+    guests:   str(raw.guests),
+    capacity: str(raw.capacity),
+    date:     str(raw.date),
+    names:    str(raw.names),
+    notes:    str(raw.notes),
+    currency: (typeof raw.currency === 'string' && raw.currency) ? raw.currency : '$',
+    nonneg: Array.isArray(raw.nonneg) ? raw.nonneg.filter(x => typeof x === 'string') : [],
+    custom_nonneg: Array.isArray(raw.custom_nonneg) ? raw.custom_nonneg
+      .filter(c => c && typeof c === 'object' && !Array.isArray(c))
+      .map(c => ({ id: str(c.id), label: str(c.label), est: parseFloat(c.est) || 0 })) : [],
+    vendors: Array.isArray(raw.vendors) ? raw.vendors
+      .filter(v => v && typeof v === 'object' && !Array.isArray(v))
+      .map(v => ({ name: str(v.name), contact: str(v.contact), status: str(v.status), cost: str(v.cost), next: str(v.next) })) : JSON.parse(JSON.stringify(DEFAULT_VENDORS)),
+    milestones_done: Array.isArray(raw.milestones_done) ? raw.milestones_done.filter(n => typeof n === 'number') : [],
+  };
+}
+
 // ── Load from localStorage ──
 function loadState() {
   try {
     const saved = localStorage.getItem('wedding_solver_v2');
     if (saved) {
-      try { state = JSON.parse(saved); } catch(e) {}
+      let parsed = null;
+      try { parsed = JSON.parse(saved); } catch(e) {}
+      const clean = normalizeState(parsed);
+      if (clean) state = clean;
+      // if the save was corrupted, keep the fresh default state instead of crashing
     }
   } catch(e) {
     // localStorage unavailable (Private Browsing, security restrictions, etc.)
     console.warn('localStorage unavailable:', e);
   }
-  // Ensure newer fields exist (backwards compatibility with old saves)
-  if (!state.custom_nonneg) state.custom_nonneg = [];
-  if (!state.milestones_done) state.milestones_done = [];
-  if (!state.currency) state.currency = '$';
 }
 
 // ── Save to localStorage ──
@@ -2696,7 +2721,7 @@ function renderVendorRow(v, i) {
     '</td>' +
     '<td>' +
       '<div class="vh-cost-wrap">' +
-        '<input class="v-cost" type="number" value="' + (v.cost||0) + '" min="0" oninput="save(); updateMath()" onfocus="if(this.value===\'0\'){this.value=\'\'}" onblur="if(this.value===\'\'){this.value=\'0\';save();updateMath()}">' +
+        '<input class="v-cost" type="number" value="' + esc(v.cost||0) + '" min="0" oninput="save(); updateMath()" onfocus="if(this.value===\'0\'){this.value=\'\'}" onblur="if(this.value===\'\'){this.value=\'0\';save();updateMath()}">' +
         '<svg class="vh-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' +
       '</div>' +
     '</td>' +
@@ -3225,15 +3250,12 @@ function doRestore() {
   if (!restored) {
     try { restored = JSON.parse(decodeURIComponent(escape(atob(code)))); } catch(e) {}
   }
-  if (!restored || typeof restored !== 'object' || Array.isArray(restored)) {
+  const clean = normalizeState(restored);
+  if (!clean) {
     alert('Invalid backup code. Please check and try again.');
     return;
   }
-  state = restored;
-  if (!state.custom_nonneg) state.custom_nonneg = [];
-  if (!state.milestones_done) state.milestones_done = [];
-  if (!state.currency) state.currency = '$';
-  if (!state.vendors) state.vendors = JSON.parse(JSON.stringify(DEFAULT_VENDORS));
+  state = clean;
   try { localStorage.setItem('wedding_solver_v2', JSON.stringify(state)); } catch(e) {}
   restoreUI();
   closeRestore();
